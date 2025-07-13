@@ -18,10 +18,10 @@
 
 		public int? IdDistrito { get; set; }
 
-		//public Departamento? IdDepartamentoNavigation { get; set; }
+		public Departamento? IdDepartamentoNavigation { get; set; }
 
-		//public Provincia? IdProvinciaNavigation { get; set; }
+		public Provincia? IdProvinciaNavigation { get; set; }
 
-		//public Distrito? IdDistritoNavigation { get; set; }
+		public Distrito? IdDistritoNavigation { get; set; }
 	}
 }

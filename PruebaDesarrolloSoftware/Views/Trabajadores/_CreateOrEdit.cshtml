@@ -1,16 +1,17 @@
-﻿@model PruebaDesarrolloSoftware.Models.Entities.Trabajador
+﻿@model PruebaDesarrolloSoftware.Models.Entities.TrabajadorCreateVM
 
 <div class="modal-dialog">
     <div class="modal-content">
-        <form asp-action="@((Model.Id == 0) ? "Create" : "Edit")">
+        <form asp-action="@((Model.Trabajador.Id == 0) ? "Create" : "Edit")">
             <div class="modal-header">
-                <h5 class="modal-title">@((Model.Id == 0) ? "Nuevo" : "Editar") Trabajador</h5>
+                <h5 class="modal-title">@((Model.Trabajador.Id == 0) ? "Nuevo" : "Editar") Trabajador</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
+
                 <div class="form-group">
                     <label>Tipo Documento</label>
-                    <select asp-for="TipoDocumento" class="form-control">
+                    <select asp-for="Trabajador.TipoDocumento" class="form-control">
                         <option value="">--Seleccione--</option>
                         <option value="DNI">DNI</option>
                         <option value="CarnetExtranjeria">Carnet de Extranjería</option>
@@ -19,20 +20,52 @@
                 <br />
                 <div class="form-group">
                     <label>Número Documento</label>
-                    <input asp-for="NumeroDocumento" class="form-control" />
+                    <input asp-for="Trabajador.NumeroDocumento" class="form-control" />
                 </div>
                 <br />
                 <div class="form-group">
                     <label>Nombres</label>
-                    <input asp-for="Nombres" class="form-control" />
+                    <input asp-for="Trabajador.Nombres" class="form-control" />
                 </div>
                 <br />
                 <div class="form-group">
                     <label>Sexo</label>
-                    <select asp-for="Sexo" class="form-control">
-                        <option value="">--Seleccione--</option>
-                        <option value="M">Masculino</option>
-                        <option value="F">Femenino</option>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" asp-for="Trabajador.Sexo" value="M" id="sexoM" />
+                        <label class="form-check-label" for="sexoM">
+                            Masculino
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" asp-for="Trabajador.Sexo" value="F" id="sexoF" />
+                        <label class="form-check-label" for="sexoF">
+                            Femenino
+                        </label>
+                    </div>
+                </div>
+
+                <br />
+                <div class="form-group">
+                    <label>Departamento</label>
+                    <select asp-for="Trabajador.IdDepartamento" class="form-control"
+                            asp-items="@(new SelectList(Model.Departamentos, "Id", "NombreDepartamento"))">
+                        <option value="">-- Seleccione Departamento --</option>
+                    </select>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label>Provincia</label>
+                    <select asp-for="Trabajador.IdProvincia" class="form-control"
+                            asp-items="@(new SelectList(Model.Provincias, "Id", "NombreProvincia"))">
+                        <option value="">-- Seleccione Provincia --</option>
+                    </select>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label>Distrito</label>
+                    <select asp-for="Trabajador.IdDistrito" class="form-control"
+                            asp-items="@(new SelectList(Model.Distritos, "Id", "NombreDistrito"))">
+                        <option value="">-- Seleccione Distrito --</option>
                     </select>
                 </div>
             </div>
@@ -43,3 +76,6 @@
         </form>
     </div>
 </div>
+
+
+<script src="~/js/trabajador-create.js"></script>
