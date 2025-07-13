@@ -16,41 +16,39 @@ namespace PruebaDesarrolloSoftware.Controllers
 			_context = context;
 		}
 
-		public async Task<IActionResult> Index(string sexoFiltro)
+		private TrabajadorCreateVM ConstruirViewModel(Trabajador? trabajador = null)
 		{
-			IQueryable<Trabajador> query = _context.Trabajadores
-				.AsQueryable();
+			var departamentos = _context.Departamentos.ToList();
 
-			if (!string.IsNullOrEmpty(sexoFiltro))
-			{
-				query = query.Where(t => t.Sexo == sexoFiltro);
-			}
+			var idDepartamento = trabajador?.IdDepartamento ?? departamentos.FirstOrDefault()?.Id ?? 0;
 
-			List<Trabajador> trabajadores = await query
-				.Include(x => x.IdDepartamentoNavigation)
-				.Include(x => x.IdProvinciaNavigation)
-				.Include(x => x.IdDistritoNavigation)
-				.ToListAsync();
-
-			List<TrabajadorVM> trabajadoresVM = trabajadores
-				.Select(item => new TrabajadorVM
-				{
-					Id = item.Id,
-					TipoDocumento = item.TipoDocumento,
-					NumeroDocumento = item.NumeroDocumento,
-					Nombres = item.Nombres,
-					Sexo = item.Sexo,
-					NombreDepartamento = item.IdDepartamentoNavigation?.NombreDepartamento,
-					NombreProvincia = item.IdProvinciaNavigation?.NombreProvincia,
-					NombreDistrito = item.IdDistritoNavigation?.NombreDistrito
-				})
+			var provincias = _context.Provincias
+				.Where(p => p.IdDepartamento == idDepartamento)
 				.ToList();
 
+			var idProvincia = trabajador?.IdProvincia ?? provincias.FirstOrDefault()?.Id ?? 0;
+
+			var distritos = _context.Distritos
+				.Where(d => d.IdProvincia == idProvincia)
+				.ToList();
+
+			return new TrabajadorCreateVM
+			{
+				Trabajador = trabajador ?? new Trabajador(),
+				Departamentos = departamentos,
+				Provincias = provincias,
+				Distritos = distritos
+			};
+		}
 
 
-			/*var trabajadoresVM = await _context.TrabajadoresVM
+		public async Task<IActionResult> Index(string sexoFiltro)
+		{
+			List<TrabajadorVM> trabajadoresVM = _context.TrabajadoresVM
 			.FromSqlRaw("EXEC ListarTrabajadores")
-			.ToListAsync();*/
+			.AsEnumerable()
+			.Where(x => x.Sexo == (sexoFiltro ?? x.Sexo))
+			.ToList();
 
 			return View(trabajadoresVM);
 		}
@@ -59,27 +57,10 @@ namespace PruebaDesarrolloSoftware.Controllers
 		[HttpGet]
 		public IActionResult Create()
 		{
-			var departamentos = _context.Departamentos.ToList();
-
-			//var primerDepartamentoId = departamentos.FirstOrDefault()?.Id ?? 0;
-
-			var provincias = _context.Provincias
-									 .Where(p => p.IdDepartamento == departamentos.FirstOrDefault().Id)
-									 .ToList();
-
-			var distritos = _context.Distritos
-									.Where(d => d.IdProvincia == provincias.FirstOrDefault().Id)
-									.ToList();
-
-			var vm = new TrabajadorCreateVM
-			{
-				Departamentos = departamentos,
-				Provincias = provincias,
-				Distritos = distritos
-			};
-
+			var vm = ConstruirViewModel();
 			return PartialView("_CreateOrEdit", vm);
 		}
+
 
 		[HttpGet]
 		public JsonResult GetProvincias(int idDepartamento)
@@ -103,10 +84,6 @@ namespace PruebaDesarrolloSoftware.Controllers
 			return Json(distritos);
 		}
 
-
-
-
-
 		[HttpPost]
 		public async Task<IActionResult> Create(Trabajador trabajador)
 		{
@@ -119,13 +96,13 @@ namespace PruebaDesarrolloSoftware.Controllers
 			return PartialView("_CreateOrEdit", trabajador);
 		}
 
+
 		[HttpGet]
 		public async Task<IActionResult> Edit(int id)
 		{
 			var trabajador = await _context.Trabajadores.FindAsync(id);
-			if (trabajador == null) return NotFound();
-
-			return PartialView("_CreateOrEdit", trabajador);
+			var vm = ConstruirViewModel(trabajador);
+			return PartialView("_CreateOrEdit", vm);
 		}
 
 		[HttpPost]
@@ -139,6 +116,9 @@ namespace PruebaDesarrolloSoftware.Controllers
 			}
 			return PartialView("_CreateOrEdit", trabajador);
 		}
+
+
+
 
 		[HttpPost]
 		public async Task<IActionResult> Delete(int id)
