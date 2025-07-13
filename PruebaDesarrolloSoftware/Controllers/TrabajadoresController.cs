@@ -44,11 +44,33 @@ namespace PruebaDesarrolloSoftware.Controllers
 
 		public async Task<IActionResult> Index(string sexoFiltro)
 		{
-			List<TrabajadorVM> trabajadoresVM = _context.TrabajadoresVM
-			.FromSqlRaw("EXEC ListarTrabajadores")
-			.AsEnumerable()
-			.Where(x => x.Sexo == (sexoFiltro ?? x.Sexo))
-			.ToList();
+			IQueryable<Trabajador> query = _context.Trabajadores
+				.AsQueryable();
+
+			if (!string.IsNullOrEmpty(sexoFiltro))
+			{
+				query = query.Where(t => t.Sexo == sexoFiltro);
+			}
+
+			List<Trabajador> trabajadores = await query
+				.Include(x => x.IdDepartamentoNavigation)
+				.Include(x => x.IdProvinciaNavigation)
+				.Include(x => x.IdDistritoNavigation)
+				.ToListAsync();
+
+			List<TrabajadorVM> trabajadoresVM = trabajadores
+				.Select(item => new TrabajadorVM
+				{
+					Id = item.Id,
+					TipoDocumento = item.TipoDocumento,
+					NumeroDocumento = item.NumeroDocumento,
+					Nombres = item.Nombres,
+					Sexo = item.Sexo,
+					NombreDepartamento = item.IdDepartamentoNavigation?.NombreDepartamento,
+					NombreProvincia = item.IdProvinciaNavigation?.NombreProvincia,
+					NombreDistrito = item.IdDistritoNavigation?.NombreDistrito
+				})
+				.ToList();
 
 			return View(trabajadoresVM);
 		}
