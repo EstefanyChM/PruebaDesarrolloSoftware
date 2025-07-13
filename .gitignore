@@ -1,0 +1,33 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+*.log
+
+## User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## VS Code
+.vscode/
+
+## Visual Studio
+.vs/
+
+## SQL Server localdb files
+*.mdf
+*.ldf
+
+## Auto-generated files
+Generated_Code/
+
+## EF Core Migrations snapshot
+Migrations/
+
+## Others
+*.dbmdl
+*.pdb
+*.cache
+_ReSharper*/

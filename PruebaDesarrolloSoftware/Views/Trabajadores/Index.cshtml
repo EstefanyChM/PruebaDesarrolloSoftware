@@ -1,0 +1,76 @@
+﻿@model IEnumerable<PruebaDesarrolloSoftware.Models.Entities.TrabajadorVM>
+
+@{
+    ViewData["Title"] = "Trabajadores";
+}
+
+<div class="container mt-4">
+    <h2>Trabajadores</h2>
+
+    <form method="get" class="mb-3">
+        <div class="form-group">
+            <label>Filtrar por Sexo:</label>
+            <select name="sexoFiltro" class="form-control" style="width: 200px; display: inline-block;"
+                    asp-items="ViewBag.SexoFiltroList">
+            </select>
+
+            <button type="submit" class="btn btn-primary ml-2">Filtrar</button>
+        </div>
+    </form>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Documento</th>
+                <th>Nombres</th>
+                <th>Sexo</th>
+                <th>Departamento</th>
+                <th>Provincia</th>
+                <th>Distrito</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Model)
+            {
+                var rowClass = t.Sexo == "M" ? "table-primary" : t.Sexo == "F" ? "table-warning" : "";
+                <tr class="@rowClass">
+                    <td>@t.NumeroDocumento</td>
+                    <td>@t.Nombres</td>
+                    <td>@t.Sexo</td>
+                    <td>@t.NombreDepartamento</td>
+                    <td>@t.NombreProvincia</td>
+                    <td>@t.NombreDistrito</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="openModal('/Trabajadores/Edit/@t.Id')">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </button>
+
+                        <form asp-action="Delete" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@t.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar el registro?');">
+                                <i class="bi bi-trash3-fill"></i>Eliminar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button class="btn btn-success" onclick="openModal('/Trabajadores/Create')">
+        <i class="bi bi-file-plus"></i>Nuevo Registro
+    </button>
+
+    <div id="modalContainer" class="modal fade" tabindex="-1"></div>
+</div>
+
+@section Scripts {
+    <script>
+        function openModal(url) {
+            $.get(url, function(data) {
+                $('#modalContainer').html(data).modal('show');
+            });
+        }
+    </script>
+}
