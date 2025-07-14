@@ -35,8 +35,11 @@
         <tbody>
             @foreach (var t in Model)
             {
-                var rowClass = t.Sexo == "M" ? "table-primary" : t.Sexo == "F" ? "table-warning" : "";
-                <tr class="@rowClass">
+                var rowColor = t.Sexo == "M" ? "#0071bc" : "#ff9966";
+                var rowTextColor = t.Sexo == "M" ? "#ffffff" : "#000000";
+
+
+                <tr style="background-color:@rowColor; color:@rowTextColor">
                     <td>@t.NumeroDocumento</td>
                     <td>@t.Nombres</td>
                     <td>@t.Sexo</td>
@@ -58,6 +61,7 @@
                 </tr>
             }
         </tbody>
+
     </table>
 
     <button class="btn btn-success" onclick="openModal('/Trabajadores/Create')">
