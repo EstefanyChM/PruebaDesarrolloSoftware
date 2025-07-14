@@ -68,15 +68,21 @@
         <i class="bi bi-file-plus"></i>Nuevo Registro
     </button>
 
-    <div id="modalContainer" class="modal fade" tabindex="-1"></div>
+    <div id="modalContainer"></div>
 </div>
 
 @section Scripts {
     <script>
         function openModal(url) {
-            $.get(url, function(data) {
-                $('#modalContainer').html(data).modal('show');
+            $.get(url).done(function (data) {
+                const $modal = $(data);
+                $('#modalContainer').html($modal);
+                $modal.modal('show');
             });
         }
+
+        $(document).on('click', '[data-dismiss="modal"]', function () {
+            $(this).closest('.modal').modal('hide');
+        });
     </script>
 }

@@ -1,102 +1,107 @@
 ﻿@model PruebaDesarrolloSoftware.Models.Entities.TrabajadorCreateVM
 
-<div class="modal-dialog modal-lg">
-    <div class="modal-content">
-        <form asp-action="@((Model.Trabajador.Id == 0) ? "Create" : "Edit")" class="form-horizontal">
-            <div class="modal-header">
-                <h5 class="modal-title">@((Model.Trabajador.Id == 0) ? "Nuevo" : "Editar") Trabajador</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <div class="modal-body">
-                <input type="hidden" asp-for="Trabajador.Id" />
-
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Tipo Documento</label>
-                    <div class="col-sm-9">
-                        <select asp-for="Trabajador.TipoDocumento" class="form-control">
-                            <option value="">--Seleccione--</option>
-                            <option value="DNI">DNI</option>
-                            <option value="CarnetExtranjeria">Carnet de Extranjería</option>
-                        </select>
-                        <span asp-validation-for="Trabajador.TipoDocumento" class="text-danger"></span>
-                    </div>
+<div class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form asp-action="@((Model.Trabajador.Id == 0) ? "Create" : "Edit")" class="form-horizontal">
+                <div class="modal-header">
+                    <h5 class="modal-title">@((Model.Trabajador.Id == 0) ? "Nuevo" : "Editar") Trabajador</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Número Documento</label>
-                    <div class="col-sm-9">
-                        <input asp-for="Trabajador.NumeroDocumento" class="form-control" />
-                        <span asp-validation-for="Trabajador.NumeroDocumento" class="text-danger"></span>
-                    </div>
-                </div>
+                <div class="modal-body">
+                    <input type="hidden" asp-for="Trabajador.Id" />
 
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Nombres</label>
-                    <div class="col-sm-9">
-                        <input asp-for="Trabajador.Nombres" class="form-control" />
-                        <span asp-validation-for="Trabajador.Nombres" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Sexo</label>
-                    <div class="col-sm-9">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" asp-for="Trabajador.Sexo" value="M" id="sexoM" />
-                            <label class="form-check-label" for="sexoM">Masculino</label>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Tipo Documento</label>
+                        <div class="col-sm-9">
+                            <select asp-for="Trabajador.TipoDocumento" class="form-control" required>
+                                <option value="">--Seleccione--</option>
+                                <option value="DNI">DNI</option>
+                                <option value="CarnetExtranjeria">Carnet de Extranjería</option>
+                            </select>
+                            <span asp-validation-for="Trabajador.TipoDocumento" class="text-danger"></span>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" asp-for="Trabajador.Sexo" value="F" id="sexoF" />
-                            <label class="form-check-label" for="sexoF">Femenino</label>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Número Documento</label>
+                        <div class="col-sm-9">
+                            <input asp-for="Trabajador.NumeroDocumento" class="form-control"
+                                   required pattern="\d{8,12}" title="Solo números, entre 8 y 12 dígitos" />
+                            <span asp-validation-for="Trabajador.NumeroDocumento" class="text-danger"></span>
                         </div>
-                        <span asp-validation-for="Trabajador.Sexo" class="text-danger d-block"></span>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Nombres</label>
+                        <div class="col-sm-9">
+                            <input asp-for="Trabajador.Nombres" class="form-control" required minlength="2" maxlength="100" />
+                            <span asp-validation-for="Trabajador.Nombres" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Sexo</label>
+                        <div class="col-sm-9">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="Trabajador.Sexo" value="M" id="sexoM" required />
+                                <label class="form-check-label" for="sexoM">Masculino</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="Trabajador.Sexo" value="F" id="sexoF" />
+                                <label class="form-check-label" for="sexoF">Femenino</label>
+                            </div>
+                            <span asp-validation-for="Trabajador.Sexo" class="text-danger d-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Departamento</label>
+                        <div class="col-sm-9">
+                            <select asp-for="Trabajador.IdDepartamento" class="form-control"
+                                    asp-items="@(new SelectList(Model.Departamentos, "Id", "NombreDepartamento"))"
+                                    required>
+                                <option value="">-- Seleccione Departamento --</option>
+                            </select>
+                            <span asp-validation-for="Trabajador.IdDepartamento" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Provincia</label>
+                        <div class="col-sm-9">
+                            <select asp-for="Trabajador.IdProvincia" class="form-control"
+                                    asp-items="@(new SelectList(Model.Provincias, "Id", "NombreProvincia"))"
+                                    required>
+                                <option value="">-- Seleccione Provincia --</option>
+                            </select>
+                            <span asp-validation-for="Trabajador.IdProvincia" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Distrito</label>
+                        <div class="col-sm-9">
+                            <select asp-for="Trabajador.IdDistrito" class="form-control"
+                                    asp-items="@(new SelectList(Model.Distritos, "Id", "NombreDistrito"))"
+                                    required>
+                                <option value="">-- Seleccione Distrito --</option>
+                            </select>
+                            <span asp-validation-for="Trabajador.IdDistrito" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Departamento</label>
-                    <div class="col-sm-9">
-                        <select asp-for="Trabajador.IdDepartamento" class="form-control"
-                                asp-items="@(new SelectList(Model.Departamentos, "Id", "NombreDepartamento"))">
-                            <option value="">-- Seleccione Departamento --</option>
-                        </select>
-                        <span asp-validation-for="Trabajador.IdDepartamento" class="text-danger"></span>
-                    </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Provincia</label>
-                    <div class="col-sm-9">
-                        <select asp-for="Trabajador.IdProvincia" class="form-control"
-                                asp-items="@(new SelectList(Model.Provincias, "Id", "NombreProvincia"))">
-                            <option value="">-- Seleccione Provincia --</option>
-                        </select>
-                        <span asp-validation-for="Trabajador.IdProvincia" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Distrito</label>
-                    <div class="col-sm-9">
-                        <select asp-for="Trabajador.IdDistrito" class="form-control"
-                                asp-items="@(new SelectList(Model.Distritos, "Id", "NombreDistrito"))">
-                            <option value="">-- Seleccione Distrito --</option>
-                        </select>
-                        <span asp-validation-for="Trabajador.IdDistrito" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Guardar</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
     <script src="~/js/trabajador-create.js"></script>
 }
