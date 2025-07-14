@@ -7,7 +7,9 @@
                 <h5 class="modal-title">@((Model.Trabajador.Id == 0) ? "Nuevo" : "Editar") Trabajador</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
+
             <div class="modal-body">
+                <input type="hidden" asp-for="Trabajador.Id" />
 
                 <div class="form-group">
                     <label>Tipo Documento</label>
